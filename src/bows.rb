@@ -15,6 +15,9 @@ module BowFormatter
       p["Variant Requires Shipping"] = "TRUE"
       p["Variant Taxable"] = "TRUE"
       p["Gift Card"] = "FALSE"
+
+      image_file = "#{p["Handle"]} #{p["Option1 Value"]}.jpg".downcase.gsub(" ", "-").gsub("_", "-")
+      p["Image Src"] = "http://bowhuntersuppliesimages.herokuapp.com/images/#{image_file}"
     end
   end
 
