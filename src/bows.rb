@@ -16,6 +16,13 @@ module BowFormatter
       p["Variant Taxable"] = "TRUE"
       p["Gift Card"] = "FALSE"
 
+      if p["Title"] != ""
+        filename = File.join(File.dirname(__FILE__), "../descriptions", p["Handle"]) + ".html"
+        File.open(filename, "w"){} unless File.file?(filename)
+
+        p["Body (HTML)"] = File.read(filename).gsub("\n", " ")
+      end
+
       image_file = "#{p["Handle"]} #{p["Option1 Value"]}.jpg".downcase.gsub(" ", "-").gsub("_", "-")
       p["Image Src"] = "http://bowhuntersuppliesimages.herokuapp.com/images/#{image_file}"
     end
