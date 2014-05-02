@@ -11,9 +11,9 @@ module InventoryManager
 
   def update
     read_products
-    puts "Updating #{self.class::ITEM_NAME} meta data..."
+    puts "\tUpdating #{self.class::ITEM_NAME} meta data"
     update_meta_data
-    puts "Updating #{self.class::ITEM_NAME} quantities..."
+    puts "\tUpdating #{self.class::ITEM_NAME} quantities"
     n = update_inventory
     save
     return n
@@ -34,7 +34,7 @@ module InventoryManager
         end
       end
     end
-    puts "#{self.class::ITEM_NAME} updated: #{changes}"
+    puts "\t#{self.class::ITEM_NAME} updated: #{changes}"
     changes
   end
 
@@ -52,14 +52,56 @@ module InventoryManager
 
   def self.compile
     puts "Compiling inventory files..."
-    File.open(File.join(File.dirname(__FILE__), "..", MASTER_INVENTORY_CSV_FILENAME), "wb") do |file|
+    CSV.open(File.join(File.dirname(__FILE__), "..", MASTER_INVENTORY_CSV_FILENAME), "wb") do |csv|
+      bool = false
       Dir.foreach(File.join(File.dirname(__FILE__), "../inventories")) do |filename|
         next if filename == "." or filename == ".."
-        file << File.read(File.join(File.dirname(__FILE__), "../inventories", filename))
+        puts "\t#{filename}"
+        CSV.foreach(File.join(File.dirname(__FILE__), "../inventories", filename), headers: bool) do |row|
+          csv << row
+        end
+        bool = true
       end
     end
     puts "Inventories compiled as '#{MASTER_INVENTORY_CSV_FILENAME}'"
   end
+
+  def self.validate
+    require "csv"
+
+    puts "Validating master inventory"
+    CSV.foreach(File.join(File.dirname(__FILE__), "..", MASTER_INVENTORY_CSV_FILENAME), headers: true) do |row|
+      # Check for desc when necessary.
+      puts "\t= #{row["Handle"]} needs a description." if row["Title"] != "" and row["Body (HTML)"] == ""
+
+      # Check for image alt text.
+      puts "\t= #{row["Handle"]} needs image alt text." if row["Image Alt Text"] == ""
+      # Check for published.
+      puts "\t= #{row["Handle"]} needs published." if row["Published"] == ""
+      # Check for inventory tracker.
+      puts "\t= #{row["Handle"]} needs Variant Inventory Tracker." if row["Variant Inventory Tracker"] == ""
+      # Check for inventory policy.
+      puts "\t= #{row["Handle"]} needs Variant Inventory Policy." if row["Variant Inventory Policy"] == ""
+      # Check for fulfillment service.
+      puts "\t= #{row["Handle"]} needs Variant Fulfillment Service." if row["Variant Fulfillment Service"] == ""
+      # Check for requires shipping.
+      puts "\t= #{row["Handle"]} needs Variant Requires Shipping." if row["Variant Requires Shipping"] == ""
+      # Check for taxable.
+      puts "\t= #{row["Handle"]} needs Variant Taxable." if row["Variant Taxable"] == ""
+      # Check for gift card.
+      puts "\t= #{row["Handle"]} needs Gift Card." if row["Gift Card"] == ""
+
+      # Check for duplicate SKU.
+      seen_sku = {}
+      puts "\t= #{row["Variant SKU"]} already exists." if seen_sku[row["Variant SKU"]]
+      seen_sku[row["Variant SKU"]] = true
+
+      # Quantity can't be negative.
+      puts "\t= #{row["Variant SKU"]} quantity can't be negative." if row["Variant Inventory Qty"].to_i < 0
+    end
+    puts "Master inventory validated"
+  end
+
 
 end
 

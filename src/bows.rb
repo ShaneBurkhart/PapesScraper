@@ -23,7 +23,7 @@ module BowFormatter
         p["Body (HTML)"] = File.read(filename).gsub("\n", " ")
       end
 
-      image_file = "#{p["Handle"]} #{p["Option1 Value"]}.jpg".downcase.gsub(" ", "-").gsub("_", "-")
+      image_file = "#{p["Handle"]} #{p["Option1 Value"]}.#{self.class::IMAGE_EXT}".downcase.gsub(" ", "-").gsub("_", "-")
       p["Image Src"] = "http://bowhuntersuppliesimages.herokuapp.com/images/#{image_file}"
     end
   end
@@ -35,6 +35,7 @@ class PSEBowsManager
   include BowFormatter
   INVENTORY_CSV_FILENAME = "pse_bows.csv"
   ITEM_NAME = "PSE Bows"
+  IMAGE_EXT = "jpg"
 
   def update_meta_data
     super
@@ -59,3 +60,32 @@ class PSEBowsManager
   end
 end
 
+class DiamondBowsManager
+  include InventoryManager
+  include BowFormatter
+  INVENTORY_CSV_FILENAME = "diamond_bows.csv"
+  ITEM_NAME = "Diamond Bows"
+  IMAGE_EXT = "png"
+
+  def update_meta_data
+    super
+    desc_prefixes = {}
+
+    @products.each_with_index do |p, i|
+      next if p["Title"] == "" #We don't need this since it doesn't have all the data
+      sku_prefix = p["Variant SKU"][0..4]
+      if desc_prefixes[sku_prefix].nil?
+        desc_prefixes[sku_prefix] = p["Title"]
+        (0..i).each do |index|
+          t = @products[index]
+          if t["Variant SKU"].start_with?(sku_prefix)
+            t["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{t["Option2 Value"]} handed. #{t["Option3 Value"]} draw weight. #{t["Option1 Value"]} camo."
+          end
+        end
+      else
+        p["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{p["Option2 Value"]} handed. #{p["Option3 Value"]} draw weight. #{p["Option1 Value"]} camo."
+      end
+    end
+
+  end
+end
