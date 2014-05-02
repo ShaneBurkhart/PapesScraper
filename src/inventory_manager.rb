@@ -71,6 +71,9 @@ module InventoryManager
 
     puts "Validating master inventory"
     CSV.foreach(File.join(File.dirname(__FILE__), "..", MASTER_INVENTORY_CSV_FILENAME), headers: true) do |row|
+      # TODO Duplicate SKU
+      # TODO Duplicate Handle
+
       # Check for desc when necessary.
       puts "\t= #{row["Handle"]} needs a description." if row["Title"] != "" and row["Body (HTML)"] == ""
 
