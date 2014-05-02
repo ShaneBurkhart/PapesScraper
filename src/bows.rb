@@ -15,6 +15,7 @@ module BowFormatter
       p["Variant Requires Shipping"] = "TRUE"
       p["Variant Taxable"] = "TRUE"
       p["Gift Card"] = "FALSE"
+      p["Tags"] = "#{p["Vendor"]},#{p["Option3 Value"]} Draw Weight,#{p["Option2 Value"]} Handed Bow"
 
       if p["Title"] != ""
         filename = File.join(File.dirname(__FILE__), "../descriptions", p["Handle"]) + ".html"
