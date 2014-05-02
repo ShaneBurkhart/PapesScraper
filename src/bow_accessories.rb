@@ -20,8 +20,8 @@ module AccessoryFormatter
       p["Gift Card"] = "FALSE"
       p["Tags"] = "#{p["Type"]}"
 
-      if p["Title"] != ""
-        filename = File.join(File.dirname(__FILE__), "../descriptions", p["Handle"]) + ".html"
+      if p["Title"] != nil and p["Title"] != ""
+        filename = File.join(File.dirname(__FILE__), "../descriptions", p["Vendor"].downcase(), p["Handle"]) + ".html"
         File.open(filename, "w"){} unless File.file?(filename)
 
         p["Body (HTML)"] = File.read(filename).gsub("\n", " ")
