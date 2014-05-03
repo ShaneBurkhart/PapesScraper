@@ -73,6 +73,8 @@ module InventoryManager
     CSV.foreach(File.join(File.dirname(__FILE__), "..", MASTER_INVENTORY_CSV_FILENAME), headers: true) do |row|
       # TODO Duplicate SKU
       # TODO Duplicate Handle
+      # TODO Option1 Name must not be blank
+      # TODO Option1 Value must not be blank
 
       # Check for desc when necessary.
       puts "\t= #{row["Handle"]} needs a description." if row["Title"] != nil and row["Title"] != "" and row["Body (HTML)"] == ""

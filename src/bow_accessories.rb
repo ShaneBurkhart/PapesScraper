@@ -41,9 +41,12 @@ class BowSightsManager
 
     @products.each_with_index do |p, i|
       p["Image Alt Text"] = p["Title"]
-
-      p["Option1 Name"] = nil
-      p["Option1 Value"] = nil
+      p["Option1 Name"] = "Title"
+      p["Option1 Value"] = "Default Title"
+      p["Option2 Name"] = nil
+      p["Option2 Value"] = nil
+      p["Option3 Name"] = nil
+      p["Option3 Value"] = nil
     end
 
   end
@@ -62,6 +65,8 @@ class QuiversManager
 
     @products.each_with_index do |p, i|
       p["Image Alt Text"] = "#{p["Title"]}. #{p["Option1 Value"]} Camo."
+      p["Option1 Name"] = "Title"
+      p["Option1 Value"] = "Default Title"
       p["Option2 Name"] = nil
       p["Option2 Value"] = nil
       p["Option3 Name"] = nil
