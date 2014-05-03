@@ -24,7 +24,7 @@ module BowFormatter
       p["Tags"] += ",Bow Packages" if is_package[p["Handle"]]
 
       if p["Title"] != nil and p["Title"] != ""
-        filename = File.join(File.dirname(__FILE__), "../descriptions", p["Vendor"].downcase(), p["Handle"]) + ".html"
+        filename = File.join(File.dirname(__FILE__), "../descriptions", p["Vendor"].downcase(), p["Type"].downcase().gsub(" ", "_"), p["Handle"]) + ".html"
         File.open(filename, "w"){} unless File.file?(filename)
 
         p["Body (HTML)"] = File.read(filename).gsub("\n", " ")

@@ -26,6 +26,7 @@ task :update_bow_accessories do
   changed = 0
 
   changed += BowSightsManager.new.update
+  changed += QuiversManager.new.update
 
   puts "\tBow accessories updated: #{changed}"
   puts "Done updating bow accessories inventory"
