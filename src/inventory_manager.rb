@@ -75,7 +75,7 @@ module InventoryManager
       # TODO Duplicate Handle
 
       # Check for desc when necessary.
-      puts "\t= #{row["Handle"]} needs a description." if row["Title"] != "" and row["Body (HTML)"] == ""
+      puts "\t= #{row["Handle"]} needs a description." if row["Title"] != nil and row["Title"] != "" and row["Body (HTML)"] == ""
 
       # Check for image alt text.
       puts "\t= #{row["Handle"]} needs image alt text." if row["Image Alt Text"] == ""

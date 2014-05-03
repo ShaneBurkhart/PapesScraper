@@ -6,12 +6,12 @@ module AccessoryFormatter
     read_products unless @products != nil #Check if there are products read
     @products.each do |p|
       p["Published"] = "TRUE"
-      p["Option1 Name"] = ""
-      p["Option1 Value"] = ""
-      p["Option2 Name"] = ""
-      p["Option2 Value"] = ""
-      p["Option3 Name"] = ""
-      p["Option3 Value"] = ""
+      p["Option1 Name"] = nil
+      p["Option1 Value"] = nil
+      p["Option2 Name"] = nil
+      p["Option2 Value"] = nil
+      p["Option3 Name"] = nil
+      p["Option3 Value"] = nil
       p["Variant Inventory Tracker"] = "shopify"
       p["Variant Inventory Policy"] = "deny"
       p["Variant Fulfillment Service"] = "manual"
@@ -46,7 +46,6 @@ class BowSightsManager
     desc_prefixes = {}
 
     @products.each_with_index do |p, i|
-      next if p["Title"] == "" #We don't need this since it doesn't have all the data
       p["Image Alt Text"] = p["Title"]
     end
 

@@ -5,17 +5,23 @@ module BowFormatter
   def update_meta_data
     read_products unless @products != nil #Check if there are products read
     @products.each do |p|
+      is_package = {}
+
+      is_package[p["Handle"]] = p["Title"].include?("Package") if p["Title"] != nil and p["Title"] != ""
+
       p["Published"] = "TRUE"
-      p["Option1 Name"] = "Camo"
-      p["Option2 Name"] = "Hand"
-      p["Option3 Name"] = "Draw Weight"
+      p["Option1 Name"] = "Hand"
+      p["Option2 Name"] = "Draw Weight"
+      p["Option3 Name"] = nil
+      p["Option3 Value"] = nil
       p["Variant Inventory Tracker"] = "shopify"
       p["Variant Inventory Policy"] = "deny"
       p["Variant Fulfillment Service"] = "manual"
       p["Variant Requires Shipping"] = "TRUE"
       p["Variant Taxable"] = "TRUE"
       p["Gift Card"] = "FALSE"
-      p["Tags"] = "#{p["Vendor"]},#{p["Option3 Value"]} Draw Weight,#{p["Option2 Value"]} Handed Bow"
+      p["Tags"] = "#{p["Vendor"]},#{p["Option2 Value"]} Draw Weight Bows,#{p["Option1 Value"]} Handed Bows"
+      p["Tags"] += ",Bow Packages" if is_package[p["Handle"]]
 
       if p["Title"] != nil and p["Title"] != ""
         filename = File.join(File.dirname(__FILE__), "../descriptions", p["Vendor"].downcase(), p["Handle"]) + ".html"
@@ -24,7 +30,7 @@ module BowFormatter
         p["Body (HTML)"] = File.read(filename).gsub("\n", " ")
       end
 
-      image_file = "#{p["Handle"]} #{p["Option1 Value"]}.#{self.class::IMAGE_EXT}".downcase.gsub(" ", "-").gsub("_", "-")
+      image_file = "#{p["Handle"]}.#{self.class::IMAGE_EXT}".downcase.gsub(" ", "-").gsub("_", "-")
       p["Image Src"] = "http://bowhuntersuppliesimages.herokuapp.com/images/#{image_file}"
     end
   end
@@ -43,18 +49,18 @@ class PSEBowsManager
     desc_prefixes = {}
 
     @products.each_with_index do |p, i|
-      next if p["Title"] == "" #We don't need this since it doesn't have all the data
+      next if p["Title"] == "" or p["Title"].nil? #We don't need this since it doesn't have all the data
       sku_prefix = p["Variant SKU"][0..3]
       if desc_prefixes[sku_prefix].nil?
         desc_prefixes[sku_prefix] = p["Title"]
         (0..i).each do |index|
           t = @products[index]
           if t["Variant SKU"].start_with?(sku_prefix)
-            t["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{t["Option2 Value"]} handed. #{t["Option3 Value"]} draw weight. #{t["Option1 Value"]} camo."
+            t["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{t["Option1 Value"]} handed. #{t["Option2 Value"]} draw weight."
           end
         end
       else
-        p["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{p["Option2 Value"]} handed. #{p["Option3 Value"]} draw weight. #{p["Option1 Value"]} camo."
+        p["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{p["Option1 Value"]} handed. #{p["Option2 Value"]} draw weight."
       end
     end
 
@@ -73,18 +79,18 @@ class DiamondBowsManager
     desc_prefixes = {}
 
     @products.each_with_index do |p, i|
-      next if p["Title"] == "" #We don't need this since it doesn't have all the data
+      next if p["Title"] == "" or p["Title"].nil? #We don't need this since it doesn't have all the data
       sku_prefix = p["Variant SKU"][0..4]
       if desc_prefixes[sku_prefix].nil?
         desc_prefixes[sku_prefix] = p["Title"]
         (0..i).each do |index|
           t = @products[index]
           if t["Variant SKU"].start_with?(sku_prefix)
-            t["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{t["Option2 Value"]} handed. #{t["Option3 Value"]} draw weight. #{t["Option1 Value"]} camo."
+            t["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{t["Option1 Value"]} handed. #{t["Option2 Value"]} draw weight."
           end
         end
       else
-        p["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{p["Option2 Value"]} handed. #{p["Option3 Value"]} draw weight. #{p["Option1 Value"]} camo."
+        p["Image Alt Text"] = "#{desc_prefixes[sku_prefix]}. #{p["Option1 Value"]} handed. #{p["Option2 Value"]} draw weight."
       end
     end
 
