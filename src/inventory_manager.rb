@@ -12,11 +12,24 @@ module InventoryManager
   def update
     read_products
     puts "\tUpdating #{self.class::ITEM_NAME} meta data"
+    update_default_meta_data
     update_meta_data
     puts "\tUpdating #{self.class::ITEM_NAME} quantities"
     n = update_inventory
     save
     return n
+  end
+
+  def update_default_meta_data
+    @products.each do |p|
+      p["Published"] = "TRUE"
+      p["Variant Inventory Tracker"] = "shopify"
+      p["Variant Inventory Policy"] = "deny"
+      p["Variant Fulfillment Service"] = "manual"
+      p["Variant Requires Shipping"] = "FALSE"
+      p["Variant Taxable"] = "FALSE"
+      p["Gift Card"] = "FALSE"
+    end
   end
 
   def update_inventory

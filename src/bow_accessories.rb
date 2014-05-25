@@ -5,13 +5,6 @@ module AccessoryFormatter
   def update_meta_data
     read_products unless @products != nil #Check if there are products read
     @products.each do |p|
-      p["Published"] = "TRUE"
-      p["Variant Inventory Tracker"] = "shopify"
-      p["Variant Inventory Policy"] = "deny"
-      p["Variant Fulfillment Service"] = "manual"
-      p["Variant Requires Shipping"] = "TRUE"
-      p["Variant Taxable"] = "TRUE"
-      p["Gift Card"] = "FALSE"
       p["Tags"] = "#{p["Type"]}"
 
       if p["Title"] != nil and p["Title"] != ""

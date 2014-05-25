@@ -9,17 +9,10 @@ module BowFormatter
 
       is_package[p["Handle"]] = p["Title"].include?("Package") if p["Title"] != nil and p["Title"] != ""
 
-      p["Published"] = "TRUE"
       p["Option1 Name"] = "Hand"
       p["Option2 Name"] = "Draw Weight"
       p["Option3 Name"] = nil
       p["Option3 Value"] = nil
-      p["Variant Inventory Tracker"] = "shopify"
-      p["Variant Inventory Policy"] = "deny"
-      p["Variant Fulfillment Service"] = "manual"
-      p["Variant Requires Shipping"] = "TRUE"
-      p["Variant Taxable"] = "TRUE"
-      p["Gift Card"] = "FALSE"
       p["Tags"] = "#{p["Vendor"]},#{p["Option2 Value"]} Draw Weight Bows,#{p["Option1 Value"]} Handed Bows"
       p["Tags"] += ",Bow Packages" if is_package[p["Handle"]]
 
